@@ -61,6 +61,7 @@ export function CountryGlobe({
 	const thetaRawRef = useRef(0.22);
 	// Post-release spin (phi units per frame), handed off from the drag.
 	const momentumRef = useRef(0);
+	const mouseOverRef = useRef(false);
 	// Drag state: null when not dragging; tracks start point (for the tap
 	// threshold) and last event (for velocity handoff).
 	const dragRef = useRef<{
@@ -152,6 +153,7 @@ export function CountryGlobe({
 				}
 				if (
 					Math.abs(momentumRef.current) <= AUTO_ROTATE_SPEED &&
+					!mouseOverRef.current &&
 					!reduceMotionRef.current
 				) {
 					phiRef.current += AUTO_ROTATE_SPEED;
@@ -254,7 +256,16 @@ export function CountryGlobe({
 		e.currentTarget.releasePointerCapture(e.pointerId);
 	};
 	return (
-		<div className="relative" style={{ width: size, height: size }}>
+		<div
+			className="relative"
+			style={{ width: size, height: size }}
+			onMouseEnter={() => {
+				mouseOverRef.current = true;
+			}}
+			onMouseLeave={() => {
+				mouseOverRef.current = false;
+			}}
+		>
 			<canvas
 				ref={canvasRef}
 				className="cursor-grab touch-none select-none active:cursor-grabbing"
